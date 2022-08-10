@@ -1,8 +1,12 @@
+using IdentityServer.AuthServer;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-
+builder.Services.AddIdentityServer().AddInMemoryApiResources(Config.GetApiResources())
+    .AddInMemoryApiScopes(Config.GetApiScopes()).AddInMemoryClients(Config.GetClients())
+    .AddDeveloperSigningCredential();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
