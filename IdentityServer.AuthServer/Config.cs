@@ -47,7 +47,18 @@ public static class Config
                 },
                 ClientName = "ClientOne",
                 AllowedGrantTypes = GrantTypes.ClientCredentials,
-                AllowedScopes = {"api1.read","api2.Write","api2.update"}
+                AllowedScopes = {"api1.read",}
+            },
+            new Client
+            {
+                ClientId = "Client2",
+                ClientSecrets = new List<Secret>
+                {
+                    new Secret("secret".Sha256())
+                },
+                ClientName = "ClientTwo",
+                AllowedGrantTypes = GrantTypes.ClientCredentials,
+                AllowedScopes = {"api1.read","api2.write","api2.update"}
             }
         };
     }
