@@ -11,12 +11,14 @@ public static class Config
             new ApiResource
             {
                 Name = "resource_api_1",
-                Scopes = {"api1.read","api1.write","api1.update"}
+                Scopes = {"api1.read","api1.write","api1.update"},
+                ApiSecrets = new []{new  Secret("secretapi1".Sha256())}
             },
             new ApiResource
             {
                 Name = "resource_api_2",
-                Scopes = {"api2.read","api2.write","api2.update"}
+                Scopes = {"api2.read","api2.write","api2.update"},
+                ApiSecrets = new []{new  Secret("secretapi2".Sha256()) }
             }
         };
     }
@@ -58,7 +60,7 @@ public static class Config
                 },
                 ClientName = "ClientTwo",
                 AllowedGrantTypes = GrantTypes.ClientCredentials,
-                AllowedScopes = {"api1.read","api2.write","api2.update"}
+                AllowedScopes = {"api1.read","api1.update","api2.write","api2.update"}
             }
         };
     }

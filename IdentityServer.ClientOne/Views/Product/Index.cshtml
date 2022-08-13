@@ -1,0 +1,21 @@
+﻿@model List<Product>
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>title</title>
+</head>
+<body>
+<div>
+      @foreach (var item in Model)
+      {
+          <p>@item.Id</p>
+      }
+</div>
+</body>
+</html>
