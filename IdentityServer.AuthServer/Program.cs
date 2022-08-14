@@ -6,7 +6,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddIdentityServer().AddInMemoryApiResources(Config.GetApiResources())
     .AddInMemoryApiScopes(Config.GetApiScopes()).AddInMemoryClients(Config.GetClients())
-    .AddDeveloperSigningCredential();
+    .AddDeveloperSigningCredential()
+    .AddInMemoryIdentityResources(Config.GetIdentityResources())
+    .AddTestUsers(Config.GetUsers().ToList());
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
