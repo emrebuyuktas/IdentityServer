@@ -1,9 +1,42 @@
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.IdentityModel.Tokens;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
+// builder.Services.AddAuthentication(options =>
+// {
+//     options.DefaultScheme = "Cookies";
+//     options.DefaultChallengeScheme = "oidc";
+//     
+// }).AddCookie("Cookies", options =>
+// {
+//     options.AccessDeniedPath = "/Home/AccessDenied";
+// }).AddOpenIdConnect("oidc", options =>
+// {
+//     options.SignInScheme = "Cookies";
+//     options.Authority = "https://localhost:7161";
+//     options.ClientId = "Client2-Mvc";
+//     options.ClientSecret = "secret";
+//     options.ResponseType = "code id_token";
+//     options.GetClaimsFromUserInfoEndpoint = true;
+//     options.SaveTokens = true;
+//     options.Scope.Add("api1.read");
+//     options.Scope.Add("offline_access");
+//     options.Scope.Add("CountryAndCity");
+//     options.Scope.Add("Roles");
+//     options.ClaimActions.MapUniqueJsonKey("country", "country");
+//     options.ClaimActions.MapUniqueJsonKey("city", "city");
+//     options.ClaimActions.MapUniqueJsonKey("role", "role");
+//
+//     options.TokenValidationParameters = new TokenValidationParameters
+//     {
+//         RoleClaimType = "role"
+//     };
+// });
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -17,7 +50,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-
+// app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(

@@ -9,6 +9,8 @@ builder.Services.AddIdentityServer().AddInMemoryApiResources(Config.GetApiResour
     .AddDeveloperSigningCredential()
     .AddInMemoryIdentityResources(Config.GetIdentityResources())
     .AddTestUsers(Config.GetUsers().ToList());
+builder.Logging.SetMinimumLevel(LogLevel.Debug);
+builder.Logging.AddFilter("IdentityServer4", LogLevel.Debug);
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

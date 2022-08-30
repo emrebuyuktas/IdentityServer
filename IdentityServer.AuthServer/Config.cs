@@ -1,4 +1,5 @@
 ﻿using System.Security.Claims;
+using IdentityServer4;
 using IdentityServer4.Models;
 using IdentityServer4.Test;
 
@@ -51,7 +52,7 @@ public static class Config
                 },
                 ClientName = "ClientOne",
                 AllowedGrantTypes = GrantTypes.ClientCredentials,
-                AllowedScopes = {"api1.read",}
+                AllowedScopes = {"api1.read"}
             },
             new Client
             {
@@ -63,6 +64,44 @@ public static class Config
                 ClientName = "ClientTwo",
                 AllowedGrantTypes = GrantTypes.ClientCredentials,
                 AllowedScopes = {"api1.read","api1.update","api2.write","api2.update"}
+            },
+            new Client
+            {
+                ClientId = "Client1-Mvc",
+                RequirePkce=false,
+                ClientName="Client 1 app",
+                ClientSecrets=new[] {new Secret("secret".Sha256())},
+                AllowedGrantTypes= GrantTypes.Hybrid,
+                RedirectUris=new  List<string>{"https://localhost:7169/signin-oidc"},
+                PostLogoutRedirectUris = new  List<string>{"https://localhost:7169/signout-callback-oidc"},
+                AllowedScopes = {IdentityServerConstants.StandardScopes.OpenId, IdentityServerConstants.StandardScopes.Profile, "api1.read",
+                    IdentityServerConstants.StandardScopes.OfflineAccess,"CountryAndCity","Roles"},
+                AccessTokenLifetime = (int)(DateTime.Now.AddHours(2)-DateTime.Now).TotalSeconds,
+                AllowOfflineAccess = true,
+                RefreshTokenUsage = TokenUsage.ReUse,
+                RefreshTokenExpiration = TokenExpiration.Absolute,
+                AbsoluteRefreshTokenLifetime = (int)(DateTime.Now.AddDays(60)-DateTime.Now).TotalSeconds,
+                RequireConsent = true
+                
+            },
+            new Client
+            {
+                ClientId = "Client2-Mvc",
+                RequirePkce=false,
+                ClientName="Client 2 app",
+                ClientSecrets=new[] {new Secret("secret".Sha256())},
+                AllowedGrantTypes= GrantTypes.Hybrid,
+                RedirectUris=new  List<string>{"https://localhost:7118/signin-oidc"},
+                PostLogoutRedirectUris = new  List<string>{"https://localhost:7118/signout-callback-oidc"},
+                AllowedScopes = {IdentityServerConstants.StandardScopes.OpenId, IdentityServerConstants.StandardScopes.Profile, "api1.read",
+                    IdentityServerConstants.StandardScopes.OfflineAccess,"CountryAndCity","Roles"},
+                AccessTokenLifetime = (int)(DateTime.Now.AddHours(2)-DateTime.Now).TotalSeconds,
+                AllowOfflineAccess = true,
+                RefreshTokenUsage = TokenUsage.ReUse,
+                RefreshTokenExpiration = TokenExpiration.Absolute,
+                AbsoluteRefreshTokenLifetime = (int)(DateTime.Now.AddDays(60)-DateTime.Now).TotalSeconds,
+                RequireConsent = true
+                
             }
         };
     }
@@ -72,6 +111,14 @@ public static class Config
         {
             new IdentityResources.OpenId(),
             new IdentityResources.Profile(),
+            new IdentityResource
+            {
+                Name = "CountryAndCity", DisplayName = "Country and city", Description = "Country and city informations", UserClaims = new []{"country","city"}
+            },
+            new IdentityResource
+            {
+                Name="Roles",DisplayName="Roles", Description="User Roles", UserClaims=new [] { "role"}
+            }
             
         };
     }
@@ -84,14 +131,16 @@ public static class Config
                 SubjectId = "1",
                 Username = "emrebtas@gmail",
                 Password = "emre123",
-                Claims = new List<Claim>{new Claim("given_name","Emre"),new Claim("family_name","büyüktaş")}
+                Claims = new List<Claim>{new ("given_name","Emre"), new ("family_name","büyüktaş"),
+                    new ("country","Turkey"), new ("city","Adana"),new ("role","admin")}
             },
             new TestUser
             {
                 SubjectId = "2",
                 Username = "emrebyk@gmail",
                 Password = "emre123",
-                Claims = new List<Claim>{new Claim("given_name","Emreb"),new Claim("family_name","Büyüktaş")}
+                Claims = new List<Claim>{new ("given_name","Emreb"),new ("family_name","Büyüktaş"), 
+                    new ("country","Turkey"), new ("city","Adana"),new ("role","customer")}
             }
         };
     }

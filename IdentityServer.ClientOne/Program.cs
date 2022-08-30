@@ -1,18 +1,41 @@
+using IdentityServer.ClientOne.Services;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.IdentityModel.Tokens;
+
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<IResourceHttpClient,ResourceHttpClient>();
 // Add services to the container.
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultScheme = "Cookies";
     options.DefaultChallengeScheme = "oidc";
     
-}).AddCookie("Cookies").AddOpenIdConnect("oidc", options =>
+}).AddCookie("Cookies", options =>
+{
+    options.AccessDeniedPath = "/Home/AccessDenied";
+}).AddOpenIdConnect("oidc", options =>
 {
     options.SignInScheme = "Cookies";
     options.Authority = "https://localhost:7161";
-    options.ClientId = "Client1Mvc";
+    options.ClientId = "Client1-Mvc";
     options.ClientSecret = "secret";
-    options.ResponseMode = "code id_token";
+    options.ResponseType = "code id_token";
+    options.GetClaimsFromUserInfoEndpoint = true;
+    options.SaveTokens = true;
+    options.Scope.Add("api1.read");
+    options.Scope.Add("offline_access");
+    options.Scope.Add("CountryAndCity");
+    options.Scope.Add("Roles");
+    options.ClaimActions.MapUniqueJsonKey("country", "country");
+    options.ClaimActions.MapUniqueJsonKey("city", "city");
+    options.ClaimActions.MapUniqueJsonKey("role", "role");
+
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        RoleClaimType = "role"
+    };
 });
 builder.Services.AddControllersWithViews();
 
@@ -30,7 +53,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
