@@ -1,14 +1,24 @@
 using IdentityServer.AuthServer;
+using IdentityServer.AuthServer.Models;
+using IdentityServer.AuthServer.Repositories;
+using IdentityServer.AuthServer.Services;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
-
+builder.Services.AddDbContext<CustomDbContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("LocalDb"));
+});
 // Add services to the container.
+builder.Services.AddScoped<ICustomUserRepository, CustomUserRepository>();
 builder.Services.AddControllersWithViews();
 builder.Services.AddIdentityServer().AddInMemoryApiResources(Config.GetApiResources())
     .AddInMemoryApiScopes(Config.GetApiScopes()).AddInMemoryClients(Config.GetClients())
     .AddDeveloperSigningCredential()
     .AddInMemoryIdentityResources(Config.GetIdentityResources())
-    .AddTestUsers(Config.GetUsers().ToList());
+    .AddProfileService<CustomProfileService>()
+    .AddResourceOwnerValidator<ResourceOwnerPasswordValidator>();
+    //.AddTestUsers(Config.GetUsers().ToList());
 builder.Logging.SetMinimumLevel(LogLevel.Debug);
 builder.Logging.AddFilter("IdentityServer4", LogLevel.Debug);
 var app = builder.Build();

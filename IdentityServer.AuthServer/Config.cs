@@ -74,7 +74,7 @@ public static class Config
                 AllowedGrantTypes= GrantTypes.Hybrid,
                 RedirectUris=new  List<string>{"https://localhost:7169/signin-oidc"},
                 PostLogoutRedirectUris = new  List<string>{"https://localhost:7169/signout-callback-oidc"},
-                AllowedScopes = {IdentityServerConstants.StandardScopes.OpenId, IdentityServerConstants.StandardScopes.Profile, "api1.read",
+                AllowedScopes = {IdentityServerConstants.StandardScopes.OpenId, IdentityServerConstants.StandardScopes.Email,IdentityServerConstants.StandardScopes.Profile, "api1.read",
                     IdentityServerConstants.StandardScopes.OfflineAccess,"CountryAndCity","Roles"},
                 AccessTokenLifetime = (int)(DateTime.Now.AddHours(2)-DateTime.Now).TotalSeconds,
                 AllowOfflineAccess = true,
@@ -102,6 +102,21 @@ public static class Config
                 AbsoluteRefreshTokenLifetime = (int)(DateTime.Now.AddDays(60)-DateTime.Now).TotalSeconds,
                 RequireConsent = true
                 
+            },
+            new Client
+            {
+                ClientId = "Client1-ResourceOwner-Mvc",
+                ClientName="Client 1 app",
+                ClientSecrets=new[] {new Secret("secret".Sha256())},
+                AllowedGrantTypes= GrantTypes.ResourceOwnerPassword,
+                AllowedScopes = {IdentityServerConstants.StandardScopes.OpenId, IdentityServerConstants.StandardScopes.Email,IdentityServerConstants.StandardScopes.Profile, "api1.read",
+                    IdentityServerConstants.StandardScopes.OfflineAccess,"CountryAndCity","Roles"},
+                AccessTokenLifetime = (int)(DateTime.Now.AddHours(2)-DateTime.Now).TotalSeconds,
+                AllowOfflineAccess = true,
+                RefreshTokenUsage = TokenUsage.ReUse,
+                RefreshTokenExpiration = TokenExpiration.Absolute,
+                AbsoluteRefreshTokenLifetime = (int)(DateTime.Now.AddDays(60)-DateTime.Now).TotalSeconds,
+                
             }
         };
     }
@@ -110,6 +125,7 @@ public static class Config
         return new List<IdentityResource>
         {
             new IdentityResources.OpenId(),
+            new IdentityResources.Email(),
             new IdentityResources.Profile(),
             new IdentityResource
             {
