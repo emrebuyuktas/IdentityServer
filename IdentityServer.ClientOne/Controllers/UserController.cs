@@ -45,8 +45,8 @@ namespace IdentityServer.ClientOne.Controllers
             
             var token=await httpClient.RequestRefreshTokenAsync(new RefreshTokenRequest
             {
-                ClientId = _configuration["ClientOne:ClientId"],
-                ClientSecret = _configuration["ClientOne:ClientSecret"],
+                ClientId ="Client1-ResourceOwner-Mvc",
+                ClientSecret = "secret",
                 RefreshToken = resfreshToken,
                 Address = discovery.TokenEndpoint
                 

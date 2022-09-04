@@ -6,7 +6,7 @@ public class CustomDbContext:DbContext
 {
     public DbSet<CustomUser> CustomUsers { get; set; }
     
-    public CustomDbContext(DbContextOptions options):base(options)
+    public CustomDbContext(DbContextOptions<CustomDbContext> options):base(options)
     {
         
     }

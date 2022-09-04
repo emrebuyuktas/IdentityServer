@@ -14,7 +14,7 @@ builder.Services.AddAuthentication(options =>
 
 }).AddCookie("Cookies", options =>
 {
-    options.LoginPath = "Login/Index";
+    options.LoginPath = "/Login/Index";
     options.AccessDeniedPath = "/Home/AccessDenied";
 });
 //     .AddOpenIdConnect("oidc", options =>
